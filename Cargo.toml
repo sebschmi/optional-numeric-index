@@ -9,3 +9,4 @@ repository = "https://github.com/sebschmi/optional-numeric-index"
 edition = "2024"
 
 [dependencies]
+num-traits = "0.2.19"
