@@ -4,11 +4,48 @@ mod tests;
 #[macro_export]
 macro_rules! implement_generic_index {
     ($index:ident, $optional_index:ident) => {
+        struct $index<IndexType>(IndexType);
+
+        struct $optional_index<IndexType>(IndexType);
+
+        implement_generic_index!($index, $optional_index, __inner__);
+    };
+
+    (pub $index:ident, pub $optional_index:ident) => {
         pub struct $index<IndexType>(IndexType);
 
         pub struct $optional_index<IndexType>(IndexType);
 
+        implement_generic_index!($index, $optional_index, __inner__);
+    };
+
+    (pub(crate) $index:ident, pub(crate) $optional_index:ident) => {
+        pub(crate) struct $index<IndexType>(IndexType);
+
+        pub(crate) struct $optional_index<IndexType>(IndexType);
+
+        implement_generic_index!($index, $optional_index, __inner__);
+    };
+
+    (pub(super) $index:ident, pub(super) $optional_index:ident) => {
+        pub(super) struct $index<IndexType>(IndexType);
+
+        pub(super) struct $optional_index<IndexType>(IndexType);
+
+        implement_generic_index!($index, $optional_index, __inner__);
+    };
+
+    (pub(in $index_visibility:path) $index:ident, pub(in $optional_index_visibility:path) $optional_index:ident) => {
+        pub(in $index_visibility) struct $index<IndexType>(IndexType);
+
+        pub(in $optional_index_visibility) struct $optional_index<IndexType>(IndexType);
+
+        implement_generic_index!($index, $optional_index, __inner__);
+    };
+
+    ($index:ident, $optional_index:ident, __inner__) => {
         impl<IndexType> $index<IndexType> {
+            #[allow(dead_code)]
             pub fn new(value: IndexType) -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
@@ -17,6 +54,7 @@ macro_rules! implement_generic_index {
                 Self(value)
             }
 
+            #[allow(dead_code)]
             pub fn from_usize(value: usize) -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>,
@@ -29,12 +67,14 @@ macro_rules! implement_generic_index {
                 )
             }
 
+            #[allow(dead_code)]
             pub fn into_inner(self) -> IndexType {
                 self.0
             }
         }
 
         impl<IndexType> $optional_index<IndexType> {
+            #[allow(dead_code)]
             pub fn new_some(value: IndexType) -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
@@ -43,6 +83,7 @@ macro_rules! implement_generic_index {
                 Self(value)
             }
 
+            #[allow(dead_code)]
             pub fn new_none() -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded,
@@ -50,6 +91,7 @@ macro_rules! implement_generic_index {
                 Self(IndexType::max_value())
             }
 
+            #[allow(dead_code)]
             pub fn from_usize(value: usize) -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>,
@@ -62,6 +104,7 @@ macro_rules! implement_generic_index {
                 )
             }
 
+            #[allow(dead_code)]
             pub fn into_inner(self) -> Option<IndexType>
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq,
@@ -69,6 +112,7 @@ macro_rules! implement_generic_index {
                 if self.is_some() { Some(self.0) } else { None }
             }
 
+            #[allow(dead_code)]
             pub fn is_some(&self) -> bool
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq,
@@ -76,6 +120,7 @@ macro_rules! implement_generic_index {
                 self.0 != IndexType::max_value()
             }
 
+            #[allow(dead_code)]
             pub fn is_none(&self) -> bool
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq,
@@ -308,16 +353,54 @@ macro_rules! implement_generic_index {
 #[macro_export]
 macro_rules! implement_fixed_index {
     ($index:ident, $optional_index:ident, $index_type:ty) => {
+        struct $index($index_type);
+
+        struct $optional_index($index_type);
+
+        implement_fixed_index!($index, $optional_index, $index_type, __inner__);
+    };
+
+    (pub $index:ident, pub $optional_index:ident, $index_type:ty) => {
         pub struct $index($index_type);
 
         pub struct $optional_index($index_type);
 
+        implement_fixed_index!($index, $optional_index, $index_type, __inner__);
+    };
+
+    (pub(crate) $index:ident, pub(crate) $optional_index:ident, $index_type:ty) => {
+        pub(crate) struct $index($index_type);
+
+        pub(crate) struct $optional_index($index_type);
+
+        implement_fixed_index!($index, $optional_index, $index_type, __inner__);
+    };
+
+    (pub(super) $index:ident, pub(super) $optional_index:ident, $index_type:ty) => {
+        pub(super) struct $index($index_type);
+
+        pub(super) struct $optional_index($index_type);
+
+        implement_fixed_index!($index, $optional_index, $index_type, __inner__);
+    };
+
+    (pub(in $index_visibility:path) $index:ident, pub(in $optional_index_visibility:path) $optional_index:ident, $index_type:ty) => {
+        pub(in $index_visibility) struct $index($index_type);
+
+        pub(in $optional_index_visibility) struct $optional_index($index_type);
+
+        implement_fixed_index!($index, $optional_index, $index_type, __inner__);
+    };
+
+    ($index:ident, $optional_index:ident, $index_type:ty, __inner__) => {
         impl $index {
+            #[allow(dead_code)]
             pub fn new(value: $index_type) -> Self {
                 assert_ne!(value, num_traits::bounds::UpperBounded::max_value());
                 Self(value)
             }
 
+            #[allow(dead_code)]
             pub fn from_usize(value: usize) -> Self {
                 Self::new(
                     value
@@ -327,21 +410,25 @@ macro_rules! implement_fixed_index {
                 )
             }
 
+            #[allow(dead_code)]
             pub fn into_inner(self) -> $index_type {
                 self.0
             }
         }
 
         impl $optional_index {
+            #[allow(dead_code)]
             pub fn new_some(value: $index_type) -> Self {
                 assert_ne!(value, num_traits::bounds::UpperBounded::max_value());
                 Self(value)
             }
 
+            #[allow(dead_code)]
             pub fn new_none() -> Self {
                 Self(num_traits::bounds::UpperBounded::max_value())
             }
 
+            #[allow(dead_code)]
             pub fn from_usize(value: usize) -> Self {
                 Self::new_some(
                     value
@@ -351,14 +438,17 @@ macro_rules! implement_fixed_index {
                 )
             }
 
+            #[allow(dead_code)]
             pub fn into_inner(self) -> Option<$index_type> {
                 if self.is_some() { Some(self.0) } else { None }
             }
 
+            #[allow(dead_code)]
             pub fn is_some(&self) -> bool {
                 self.0 != num_traits::bounds::UpperBounded::max_value()
             }
 
+            #[allow(dead_code)]
             pub fn is_none(&self) -> bool {
                 self.0 == num_traits::bounds::UpperBounded::max_value()
             }
