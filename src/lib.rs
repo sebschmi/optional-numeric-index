@@ -68,7 +68,15 @@ macro_rules! implement_generic_index {
             }
 
             #[allow(dead_code)]
-            pub fn into_inner(self) -> IndexType {
+            pub fn from_raw(value: IndexType) -> Self
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                Self::new(value)
+            }
+
+            #[allow(dead_code)]
+            pub fn into_raw(self) -> IndexType {
                 self.0
             }
         }
@@ -92,20 +100,19 @@ macro_rules! implement_generic_index {
             }
 
             #[allow(dead_code)]
-            pub fn from_usize(value: usize) -> Self
+            pub fn from_raw(value: Option<IndexType>) -> Self
             where
-                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>,
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
             {
-                Self::new_some(
-                    value
-                        .try_into()
-                        .ok()
-                        .expect("index conversion from usize failed"),
-                )
+                if let Some(value) = value {
+                    Self::new_some(value)
+                } else {
+                    Self::new_none()
+                }
             }
 
             #[allow(dead_code)]
-            pub fn into_inner(self) -> Option<IndexType>
+            pub fn into_raw(self) -> Option<IndexType>
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq,
             {
@@ -165,44 +172,62 @@ macro_rules! implement_generic_index {
             }
         }
 
-        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug> From<IndexType>
-            for $index<IndexType>
+        ////////////////////////////////////
+        ////// Conversions with usize //////
+        ////////////////////////////////////
+
+        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>>
+            From<usize> for $index<IndexType>
         {
-            fn from(value: IndexType) -> Self {
-                Self::new(value)
+            fn from(value: usize) -> Self {
+                Self::new(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
             }
         }
 
-        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug> From<IndexType>
-            for $optional_index<IndexType>
+        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>>
+            From<usize> for $optional_index<IndexType>
         {
-            fn from(value: IndexType) -> Self {
-                Self::new_some(value)
+            fn from(value: usize) -> Self {
+                Self::new_some(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
             }
         }
 
-        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug>
-            From<Option<IndexType>> for $optional_index<IndexType>
+        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>>
+            From<Option<usize>> for $optional_index<IndexType>
         {
-            fn from(value: Option<IndexType>) -> Self {
-                match value {
-                    Some(v) => Self::new_some(v),
-                    None => Self::new_none(),
+            fn from(value: Option<usize>) -> Self {
+                if let Some(value) = value {
+                    Self::new_some(
+                        value
+                            .try_into()
+                            .ok()
+                            .expect("index conversion from usize failed"),
+                    )
+                } else {
+                    Self::new_none()
                 }
             }
         }
 
-        ////////////////////////////////////
-        ////// Conversions into usize //////
-        ////////////////////////////////////
-
-        impl<IndexType: TryInto<usize>> From<$index<IndexType>> for usize {
-            fn from(index: $index<IndexType>) -> Self {
-                index
+        impl<IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryInto<usize>>
+            From<$index<IndexType>> for usize
+        {
+            fn from(value: $index<IndexType>) -> Self {
+                value
                     .0
                     .try_into()
                     .ok()
-                    .expect("index conversion to usize failed")
+                    .expect("index conversion from usize failed")
             }
         }
 
@@ -401,17 +426,12 @@ macro_rules! implement_fixed_index {
             }
 
             #[allow(dead_code)]
-            pub fn from_usize(value: usize) -> Self {
-                Self::new(
-                    value
-                        .try_into()
-                        .ok()
-                        .expect("index conversion from usize failed"),
-                )
+            pub fn from_raw(value: $index_type) -> Self {
+                Self::new(value)
             }
 
             #[allow(dead_code)]
-            pub fn into_inner(self) -> $index_type {
+            pub fn into_raw(self) -> $index_type {
                 self.0
             }
         }
@@ -429,17 +449,16 @@ macro_rules! implement_fixed_index {
             }
 
             #[allow(dead_code)]
-            pub fn from_usize(value: usize) -> Self {
-                Self::new_some(
-                    value
-                        .try_into()
-                        .ok()
-                        .expect("index conversion from usize failed"),
-                )
+            pub fn from_raw(value: Option<$index_type>) -> Self {
+                if let Some(value) = value {
+                    Self::new_some(value)
+                } else {
+                    Self::new_none()
+                }
             }
 
             #[allow(dead_code)]
-            pub fn into_inner(self) -> Option<$index_type> {
+            pub fn into_raw(self) -> Option<$index_type> {
                 if self.is_some() { Some(self.0) } else { None }
             }
 
@@ -484,30 +503,46 @@ macro_rules! implement_fixed_index {
             }
         }
 
-        impl From<$index_type> for $index {
-            fn from(value: $index_type) -> Self {
-                Self::new(value)
+        ////////////////////////////////////
+        ////// Conversions with usize //////
+        ////////////////////////////////////
+
+        impl From<usize> for $index {
+            fn from(value: usize) -> Self {
+                Self::new(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
             }
         }
 
-        impl From<$index_type> for $optional_index {
-            fn from(value: $index_type) -> Self {
-                Self::new_some(value)
+        impl From<usize> for $optional_index {
+            fn from(value: usize) -> Self {
+                Self::new_some(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
             }
         }
 
-        impl From<Option<$index_type>> for $optional_index {
-            fn from(value: Option<$index_type>) -> Self {
-                match value {
-                    Some(v) => Self::new_some(v),
-                    None => Self::new_none(),
+        impl From<Option<usize>> for $optional_index {
+            fn from(value: Option<usize>) -> Self {
+                if let Some(value) = value {
+                    Self::new_some(
+                        value
+                            .try_into()
+                            .ok()
+                            .expect("index conversion from usize failed"),
+                    )
+                } else {
+                    Self::new_none()
                 }
             }
         }
-
-        ////////////////////////////////////
-        ////// Conversions into usize //////
-        ////////////////////////////////////
 
         impl From<$index> for usize {
             fn from(index: $index) -> Self {
