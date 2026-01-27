@@ -487,13 +487,13 @@ macro_rules! implement_fixed_index {
 
         impl Clone for $index {
             fn clone(&self) -> Self {
-                Self(self.0.clone())
+                *self
             }
         }
 
         impl Clone for $optional_index {
             fn clone(&self) -> Self {
-                Self(self.0.clone())
+                *self
             }
         }
 
@@ -527,13 +527,13 @@ macro_rules! implement_fixed_index {
 
         impl PartialOrd for $index {
             fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-                self.0.partial_cmp(&other.0)
+                Some(self.cmp(other))
             }
         }
 
         impl PartialOrd for $optional_index {
             fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-                self.0.partial_cmp(&other.0)
+                Some(self.cmp(other))
             }
         }
 
