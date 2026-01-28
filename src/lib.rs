@@ -68,6 +68,17 @@ macro_rules! implement_generic_index {
             }
 
             #[allow(dead_code)]
+            pub fn into_usize(self) -> usize
+            where
+                IndexType: TryInto<usize>,
+            {
+                self.0
+                    .try_into()
+                    .ok()
+                    .expect("index conversion to usize failed")
+            }
+
+            #[allow(dead_code)]
             pub fn from_raw(value: IndexType) -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
@@ -97,6 +108,53 @@ macro_rules! implement_generic_index {
                 IndexType: num_traits::bounds::UpperBounded,
             {
                 Self(IndexType::max_value())
+            }
+
+            #[allow(dead_code)]
+            pub fn from_usize(value: usize) -> Self
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>,
+            {
+                Self::new_some(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
+            }
+
+            #[allow(dead_code)]
+            pub fn from_option_usize(value: Option<usize>) -> Self
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>,
+            {
+                if let Some(value) = value {
+                    Self::new_some(
+                        value
+                            .try_into()
+                            .ok()
+                            .expect("index conversion from usize failed"),
+                    )
+                } else {
+                    Self::new_none()
+                }
+            }
+
+            #[allow(dead_code)]
+            pub fn into_usize(self) -> Option<usize>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + TryInto<usize>,
+            {
+                if self.is_some() {
+                    Some(
+                        self.0
+                            .try_into()
+                            .ok()
+                            .expect("index conversion to usize failed"),
+                    )
+                } else {
+                    None
+                }
             }
 
             #[allow(dead_code)]
@@ -426,6 +484,24 @@ macro_rules! implement_fixed_index {
             }
 
             #[allow(dead_code)]
+            pub fn from_usize(value: usize) -> Self {
+                Self::new(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
+            }
+
+            #[allow(dead_code)]
+            pub fn into_usize(self) -> usize {
+                self.0
+                    .try_into()
+                    .ok()
+                    .expect("index conversion to usize failed")
+            }
+
+            #[allow(dead_code)]
             pub fn from_raw(value: $index_type) -> Self {
                 Self::new(value)
             }
@@ -446,6 +522,44 @@ macro_rules! implement_fixed_index {
             #[allow(dead_code)]
             pub fn new_none() -> Self {
                 Self(num_traits::bounds::UpperBounded::max_value())
+            }
+
+            #[allow(dead_code)]
+            pub fn from_usize(value: usize) -> Self {
+                Self::new_some(
+                    value
+                        .try_into()
+                        .ok()
+                        .expect("index conversion from usize failed"),
+                )
+            }
+
+            #[allow(dead_code)]
+            pub fn from_option_usize(value: Option<usize>) -> Self {
+                if let Some(value) = value {
+                    Self::new_some(
+                        value
+                            .try_into()
+                            .ok()
+                            .expect("index conversion from usize failed"),
+                    )
+                } else {
+                    Self::new_none()
+                }
+            }
+
+            #[allow(dead_code)]
+            pub fn into_usize(self) -> Option<usize> {
+                if self.is_some() {
+                    Some(
+                        self.0
+                            .try_into()
+                            .ok()
+                            .expect("index conversion to usize failed"),
+                    )
+                } else {
+                    None
+                }
             }
 
             #[allow(dead_code)]
