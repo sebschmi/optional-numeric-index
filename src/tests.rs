@@ -11,6 +11,13 @@ fn test_generic() {
     implement_generic_index!(pub(super) PubSuperIndex, pub(super) PubSuperOptionalIndex);
 
     implement_generic_index!(pub(in crate::tests) PubInTestsIndex, pub(in crate::tests) PubInTestsOptionalIndex);
+
+    unsafe {
+        let index = Index::new(0u32);
+        let optional_index = OptionalIndex::from(index);
+        let unwrapped_index = optional_index.unwrap_unchecked();
+        assert_eq!(index, unwrapped_index);
+    }
 }
 
 #[test]
@@ -24,4 +31,11 @@ fn test_fixed() {
     implement_fixed_index!(pub(super) PubSuperFixedIndex, pub(super) PubSuperOptionalFixedIndex, u32);
 
     implement_fixed_index!(pub(in crate::tests) PubInTestsFixedIndex, pub(in crate::tests) PubInTestsOptionalFixedIndex, u32);
+
+    unsafe {
+        let index = FixedIndex::new(0);
+        let optional_index = OptionalFixedIndex::from(index);
+        let unwrapped_index = optional_index.unwrap_unchecked();
+        assert_eq!(index, unwrapped_index);
+    }
 }

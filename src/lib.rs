@@ -135,11 +135,46 @@ macro_rules! implement_generic_index {
             }
 
             #[allow(dead_code)]
+            pub fn expect(self, message: &str) -> $index<IndexType>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                self.into_option().expect(message)
+            }
+
+            #[allow(dead_code)]
             pub fn unwrap(self) -> $index<IndexType>
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
             {
                 self.into_option().unwrap()
+            }
+
+            #[allow(dead_code)]
+            pub fn unwrap_or(self, default: $index<IndexType>) -> $index<IndexType>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                self.into_option().unwrap_or(default)
+            }
+
+            #[allow(dead_code)]
+            pub fn unwrap_or_else(
+                self,
+                default: impl FnOnce() -> $index<IndexType>,
+            ) -> $index<IndexType>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                self.into_option().unwrap_or_else(default)
+            }
+
+            #[allow(dead_code)]
+            pub unsafe fn unwrap_unchecked(self) -> $index<IndexType>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                unsafe { self.into_option().unwrap_unchecked() }
             }
 
             #[allow(dead_code)]
@@ -575,8 +610,28 @@ macro_rules! implement_fixed_index {
             }
 
             #[allow(dead_code)]
+            pub fn expect(self, message: &str) -> $index {
+                self.into_option().expect(message)
+            }
+
+            #[allow(dead_code)]
             pub fn unwrap(self) -> $index {
                 self.into_option().unwrap()
+            }
+
+            #[allow(dead_code)]
+            pub fn unwrap_or(self, default: $index) -> $index {
+                self.into_option().unwrap_or(default)
+            }
+
+            #[allow(dead_code)]
+            pub fn unwrap_or_else(self, default: impl FnOnce() -> $index) -> $index {
+                self.into_option().unwrap_or_else(default)
+            }
+
+            #[allow(dead_code)]
+            pub unsafe fn unwrap_unchecked(self) -> $index {
+                unsafe { self.into_option().unwrap_unchecked() }
             }
 
             #[allow(dead_code)]
