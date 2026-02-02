@@ -139,11 +139,7 @@ macro_rules! implement_generic_index {
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
             {
-                if self.is_some() {
-                    $index::new(self.0)
-                } else {
-                    panic!("called `unwrap()` on a `None` value");
-                }
+                self.into_option().unwrap()
             }
 
             #[allow(dead_code)]
@@ -580,11 +576,7 @@ macro_rules! implement_fixed_index {
 
             #[allow(dead_code)]
             pub fn unwrap(self) -> $index {
-                if self.is_some() {
-                    $index::new(self.0)
-                } else {
-                    panic!("called `unwrap()` on a `None` value");
-                }
+                self.into_option().unwrap()
             }
 
             #[allow(dead_code)]
