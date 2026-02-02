@@ -119,6 +119,22 @@ macro_rules! implement_generic_index {
             }
 
             #[allow(dead_code)]
+            pub fn from_option(option: Option<$index<IndexType>>) -> Self
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                Self::from(option)
+            }
+
+            #[allow(dead_code)]
+            pub fn into_option(self) -> Option<$index<IndexType>>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                self.into()
+            }
+
+            #[allow(dead_code)]
             pub fn from_usize(value: usize) -> Self
             where
                 IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug + TryFrom<usize>,
@@ -538,6 +554,16 @@ macro_rules! implement_fixed_index {
             #[allow(dead_code)]
             pub fn new_none() -> Self {
                 Self(num_traits::bounds::UpperBounded::max_value())
+            }
+
+            #[allow(dead_code)]
+            pub fn from_option(option: Option<$index>) -> Self {
+                Self::from(option)
+            }
+
+            #[allow(dead_code)]
+            pub fn into_option(self) -> Option<$index> {
+                self.into()
             }
 
             #[allow(dead_code)]
