@@ -44,6 +44,10 @@ macro_rules! implement_generic_index {
     };
 
     ($index:ident, $optional_index:ident, __inner__) => {
+        ///////////////////
+        ////// Index //////
+        ///////////////////
+
         impl<IndexType> $index<IndexType> {
             #[allow(dead_code)]
             pub fn new(value: IndexType) -> Self
@@ -91,6 +95,10 @@ macro_rules! implement_generic_index {
                 self.0
             }
         }
+
+        ////////////////////////////
+        ////// Optional Index //////
+        ////////////////////////////
 
         impl<IndexType> $optional_index<IndexType> {
             #[allow(dead_code)]
@@ -476,6 +484,10 @@ macro_rules! implement_fixed_index {
     };
 
     ($index:ident, $optional_index:ident, $index_type:ty, __inner__) => {
+        ///////////////////
+        ////// Index //////
+        ///////////////////
+
         impl $index {
             #[allow(dead_code)]
             pub fn new(value: $index_type) -> Self {
@@ -511,6 +523,10 @@ macro_rules! implement_fixed_index {
                 self.0
             }
         }
+
+        ////////////////////////////
+        ////// Optional Index //////
+        ////////////////////////////
 
         impl $optional_index {
             #[allow(dead_code)]
