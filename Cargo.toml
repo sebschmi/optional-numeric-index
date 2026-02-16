@@ -8,5 +8,9 @@ repository = "https://github.com/sebschmi/optional-numeric-index"
 
 edition = "2024"
 
+[features]
+zerocopy = ["dep:zerocopy"]
+
 [dependencies]
 num-traits = "0.2.19"
+zerocopy = { version = "0.8.39", features = ["derive"], optional = true }
