@@ -4,29 +4,9 @@ mod tests;
 #[macro_export]
 macro_rules! implement_generic_index {
     ($index:ident, $optional_index:ident) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         struct $index<IndexType>(IndexType);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         struct $optional_index<IndexType>(IndexType);
 
@@ -34,29 +14,9 @@ macro_rules! implement_generic_index {
     };
 
     (pub $index:ident, pub $optional_index:ident) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub struct $index<IndexType>(IndexType);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub struct $optional_index<IndexType>(IndexType);
 
@@ -64,29 +24,9 @@ macro_rules! implement_generic_index {
     };
 
     (pub(crate) $index:ident, pub(crate) $optional_index:ident) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub(crate) struct $index<IndexType>(IndexType);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub(crate) struct $optional_index<IndexType>(IndexType);
 
@@ -94,29 +34,9 @@ macro_rules! implement_generic_index {
     };
 
     (pub(super) $index:ident, pub(super) $optional_index:ident) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub(super) struct $index<IndexType>(IndexType);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub(super) struct $optional_index<IndexType>(IndexType);
 
@@ -124,29 +44,9 @@ macro_rules! implement_generic_index {
     };
 
     (pub(in $index_visibility:path) $index:ident, pub(in $optional_index_visibility:path) $optional_index:ident) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub(in $index_visibility) struct $index<IndexType>(IndexType);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-                zerocopy::Unaligned,
-            )
-        )]
         #[repr(transparent)]
         pub(in $optional_index_visibility) struct $optional_index<IndexType>(IndexType);
 
@@ -613,27 +513,9 @@ macro_rules! implement_generic_index {
 #[macro_export]
 macro_rules! implement_fixed_index {
     ($index:ident, $optional_index:ident, $index_type:ty) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         #[repr(transparent)]
         struct $index($index_type);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         #[repr(transparent)]
         struct $optional_index($index_type);
 
@@ -641,104 +523,32 @@ macro_rules! implement_fixed_index {
     };
 
     (pub $index:ident, pub $optional_index:ident, $index_type:ty) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub struct $index($index_type);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub struct $optional_index($index_type);
 
         implement_fixed_index!($index, $optional_index, $index_type, __inner__);
     };
 
     (pub(crate) $index:ident, pub(crate) $optional_index:ident, $index_type:ty) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub(crate) struct $index($index_type);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub(crate) struct $optional_index($index_type);
 
         implement_fixed_index!($index, $optional_index, $index_type, __inner__);
     };
 
     (pub(super) $index:ident, pub(super) $optional_index:ident, $index_type:ty) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub(super) struct $index($index_type);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub(super) struct $optional_index($index_type);
 
         implement_fixed_index!($index, $optional_index, $index_type, __inner__);
     };
 
     (pub(in $index_visibility:path) $index:ident, pub(in $optional_index_visibility:path) $optional_index:ident, $index_type:ty) => {
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub(in $index_visibility) struct $index($index_type);
 
-        #[cfg_attr(
-            feature = "zerocopy",
-            derive(
-                zerocopy::FromBytes,
-                zerocopy::IntoBytes,
-                zerocopy::KnownLayout,
-                zerocopy::Immutable,
-            )
-        )]
         pub(in $optional_index_visibility) struct $optional_index($index_type);
 
         implement_fixed_index!($index, $optional_index, $index_type, __inner__);
