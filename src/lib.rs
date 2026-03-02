@@ -269,6 +269,14 @@ macro_rules! implement_generic_index {
             {
                 self.0 == IndexType::max_value()
             }
+
+            #[allow(dead_code)]
+            pub fn into_iter(self) -> impl Iterator<Item = $index<IndexType>>
+            where
+                IndexType: num_traits::bounds::UpperBounded + Eq + std::fmt::Debug,
+            {
+                self.into_option().into_iter()
+            }
         }
 
         /////////////////////////
@@ -706,6 +714,11 @@ macro_rules! implement_fixed_index {
             #[allow(dead_code)]
             pub fn is_none(&self) -> bool {
                 self.0 == num_traits::bounds::UpperBounded::max_value()
+            }
+
+            #[allow(dead_code)]
+            pub fn into_iter(self) -> impl Iterator<Item = $index> {
+                self.into_option().into_iter()
             }
         }
 
